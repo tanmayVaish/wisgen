@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen">
+  <div class="flex h-screen font-poppins">
     <div class="bg-background hidden md:flex md:flex-col w-2/5">
       <div class="flex items-center justify-center w-full flex-1">
         <div class="w-40 h-40 lg:w-56 lg:h-56">
@@ -56,10 +56,8 @@
             </defs>
           </svg>
         </div>
-        <div class="text-white px-4 xl:px-10 font-sans">
-          <p
-            class="font-semibold lg:font-bold text-lg lg:text-xl xl:text-2xl mb-5"
-          >
+        <div class="text-white px-4 xl:px-10">
+          <p class="font-bold lg:font-bold text-lg lg:text-xl xl:text-2xl mb-5">
             Welcome Back!
           </p>
           <p class="font-light lg:font-normal text-sm lg:text-base">
@@ -83,8 +81,21 @@
         </div>
       </div>
     </div>
-    <div class="flex-1">
-      <slot />
+    <div class="flex flex-1 items-center justify-center">
+      <div class="w-full md:w-4/5 lg:w-3/5 xl:w-1/2">
+        <div
+          class="font-poppins font-bold text-lg sm:text-xl lg:text-2xl text-black"
+        >
+          Sign In to WisdomCircle
+        </div>
+        <div class="flex text-sm sm:text-base mt-1">
+          <p class="text-[#404555]">Don’t have an account?</p>
+          <a href="/signup" class="text-[#2558E5] font-semibold ml-1"
+            >Sign Up</a
+          >
+        </div>
+        <slot />
+      </div>
     </div>
   </div>
 </template>
