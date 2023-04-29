@@ -156,6 +156,7 @@
         <button
           class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] focus:outline-none focus:ring-2 focus:ring-black md:mt-6 p-3"
           :disabled="!email || !password"
+          type="submit"
         >
           Sign In
         </button>

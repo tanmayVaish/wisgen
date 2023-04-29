@@ -27,6 +27,16 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   async login(@Body() body: loginDto, @Res({ passthrough: true }) res: any) {
     const user = await this.authService.login(body);
+
+    return user;
+  }
+
+  @Post('verify')
+  async verify(
+    @Body('token') token: string,
+    @Res({ passthrough: true }) res: any,
+  ) {
+    const user = await this.authService.verifyEmail(token);
     res.cookie('token', user.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

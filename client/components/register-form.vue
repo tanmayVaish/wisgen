@@ -184,6 +184,11 @@
   </div>
 </template>
 <script>
+// import * as yup from 'yup'
+//
+// const registerSchema = yup.object({
+//   email: yup.string().required().email(),
+// })
 export default {
   name: 'register-form.vue',
   data() {
