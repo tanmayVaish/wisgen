@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen font-poppins">
+  <div class="flex md:h-screen font-poppins">
     <div class="bg-background hidden md:flex md:flex-col w-2/5">
       <div class="flex items-center justify-center w-full flex-1">
         <div class="w-40 h-40 lg:w-56 lg:h-56">
@@ -81,60 +81,12 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-1 items-center justify-center">
-      <div class="w-full md:w-4/5 lg:w-3/5 xl:w-1/2">
-        <div
-          class="font-poppins font-bold text-lg sm:text-xl lg:text-2xl text-black"
-        >
-          {{ getFormTitle }}
-        </div>
-        <div class="flex text-sm sm:text-base mt-1">
-          <p class="text-[#404555]">{{ getFormSubTitle }}</p>
-          <a
-            :class="
-              ($route.name === 'forgot' && 'hidden') ||
-              ($route.name === 'reset' && 'hidden')
-            "
-            :href="
-              ($route.name === 'login' && '/register') ||
-              ($route.name === 'register' && '/login') ||
-              ($route.name === 'forgot' && '/login') ||
-              ($route.name === 'reset' && '/login')
-            "
-            class="text-[#2558E5] font-semibold ml-1"
-            >{{
-              ($route.name === 'login' && 'Sign Up') ||
-              ($route.name === 'register' && 'Sign In')
-            }}</a
-          >
-        </div>
-        <slot />
-      </div>
-    </div>
+    <slot />
   </div>
 </template>
 
 <script>
 export default {
-  computed: {
-    getFormTitle() {
-      return (
-        (this.$route.name === 'login' && 'Sign In to Wisdom Circle') ||
-        (this.$route.name === 'register' && 'Create an Account') ||
-        (this.$route.name === 'forgot' && 'Forgot Password') ||
-        (this.$route.name === 'reset' && 'Reset Password')
-      )
-    },
-    getFormSubTitle() {
-      return (
-        (this.$route.name === 'login' && "Don't have an account?") ||
-        (this.$route.name === 'register' && 'Already have an account?') ||
-        (this.$route.name === 'forgot' &&
-          'We’ll send you a reset password link to your registered email address') ||
-        (this.$route.name === 'reset' &&
-          'Enter new password you haven’t used before')
-      )
-    },
-  },
+  computed: {},
 }
 </script>

@@ -91,7 +91,7 @@ export default {
   updated() {},
   methods: {
     handleRegister() {
-      fetch('http://localhost:8080/auth/register', {
+      fetch('/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

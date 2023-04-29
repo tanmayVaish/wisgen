@@ -5,6 +5,7 @@ import {
   HttpCode,
   ValidationPipe,
   UsePipes,
+  Res,
 } from '@nestjs/common';
 import { registerDto } from './dto/register.dto';
 import { loginDto } from './dto/login.dto';
@@ -24,8 +25,12 @@ export class AuthController {
   @HttpCode(200)
   @Post('login')
   @UsePipes(new ValidationPipe())
-  async login(@Body() body: loginDto) {
+  async login(@Body() body: loginDto, @Res({ passthrough: true }) res: any) {
     const user = await this.authService.login(body);
+    res.cookie('token', user.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+    });
     return user;
   }
 }
