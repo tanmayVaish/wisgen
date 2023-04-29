@@ -11,11 +11,11 @@
       Email me on a Recovery Link
     </button>
     <button
-      class="bg-[#FEFCF4] border border-[#A9871E] text-[#121317] font-semibold rounded-[4px] p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black"
+      class="bg-[#FEFCF4] border border-[#A9871E] text-[#A9871E] font-semibold rounded-[4px] p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black"
     >
       Return to Sign In
     </button>
   </form>
 </template>
 
-<script setup lang="ts"></script>
+<script></script>

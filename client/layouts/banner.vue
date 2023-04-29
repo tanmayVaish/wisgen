@@ -86,13 +86,13 @@
         <div
           class="font-poppins font-bold text-lg sm:text-xl lg:text-2xl text-black"
         >
-          Sign In to WisdomCircle
+          {{ getFormTitle }}
         </div>
         <div class="flex text-sm sm:text-base mt-1">
-          <p class="text-[#404555]">Don’t have an account?</p>
-          <a href="/signup" class="text-[#2558E5] font-semibold ml-1"
-            >Sign Up</a
-          >
+          <p class="text-[#404555]">{{ getFormSubTitle }}</p>
+          <!--          <a href="/signup" class="text-[#2558E5] font-semibold ml-1"-->
+          <!--            >Sign Up</a-->
+          <!--          >-->
         </div>
         <slot />
       </div>
@@ -100,4 +100,27 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script>
+export default {
+  computed: {
+    getFormTitle() {
+      return (
+        (this.$route.name === 'login' && 'Sign In to Wisdom Circle') ||
+        (this.$route.name === 'register' && 'Create an Account') ||
+        (this.$route.name === 'forgot' && 'Forgot Password') ||
+        (this.$route.name === 'reset' && 'Reset Password')
+      )
+    },
+    getFormSubTitle() {
+      return (
+        (this.$route.name === 'login' && "Don't have an account?") ||
+        (this.$route.name === 'register' && 'Already have an account?') ||
+        (this.$route.name === 'forgot' &&
+          'We’ll send you a reset password link to your registered email address') ||
+        (this.$route.name === 'reset' &&
+          'Enter new password you haven’t used before')
+      )
+    },
+  },
+}
+</script>
