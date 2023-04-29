@@ -92,7 +92,7 @@
             Sign In to WisdomCircle
           </div>
           <div class="flex text-sm sm:text-base mt-1">
-            <p class="text-[#404555]">Already have an account?</p>
+            <p class="text-[#404555]">Don’t have an account?</p>
             <a
               :href="
                 ($route.name === 'login' && '/register') ||
@@ -108,14 +108,14 @@
         </div>
       </div>
       <form
-        class="w-full flex flex-1 flex-col font-poppins justify-between"
+        class="w-full flex flex-1 flex-col font-poppins justify-between mt-5"
         @submit.prevent="login"
       >
         <div class="">
           <div class="mb-3">
             <input
               v-model="email"
-              class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-2 rounded-sm w-full"
+              class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black rounded-sm w-full p-3"
               type="text"
               placeholder="Email or Mobile Number"
             />
@@ -136,7 +136,7 @@
             <input
               v-model="password"
               :class="passwordError ? 'border-[#D92D20]' : 'border-[#DCDEE5]'"
-              class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-2 rounded-sm w-full"
+              class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black rounded-sm w-full p-3"
               type="password"
               placeholder="Password"
             />
@@ -147,12 +147,14 @@
               Sorry! Password entered is incorrect
             </div>
           </div>
-          <a href="/forgot" class="text-right text-[#2558E5] font-semibold"
-            >Forgot Password</a
-          >
+          <div class="w-full flex justify-end items-center">
+            <a href="/forgot" class="text-[#2558E5] font-semibold"
+              >Forgot Password</a
+            >
+          </div>
         </div>
         <button
-          class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] p-2 focus:outline-none focus:ring-2 focus:ring-black md:mt-6"
+          class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] focus:outline-none focus:ring-2 focus:ring-black md:mt-6 p-3"
           :disabled="!email || !password"
         >
           Sign In
@@ -189,13 +191,13 @@ export default {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.status === 'success') {
+          if (data.status === 'login_successful') {
             this.$router.push('/')
-          } else if (data.status === 'emailError') {
+          } else if (data.status === 'user_not_found') {
             this.emailError = true
-          } else if (data.status === 'mobileError') {
+          } else if (data.status === 'mobile_not_found') {
             this.mobileError = true
-          } else if (data.status === 'passwordError') {
+          } else if (data.status === 'incorrect_password') {
             this.passwordError = true
           } else {
             console.log(data.message)

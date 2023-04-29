@@ -45,13 +45,19 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new HttpException('User Not Found!', HttpStatus.NOT_FOUND);
+      return {
+        message: 'User Not Found!',
+        status: 'user_not_found',
+      };
     }
 
     const isMatch = await bcrypt.compare(body.password, user.password);
 
     if (!isMatch) {
-      throw new HttpException('Invalid Credentials!', HttpStatus.BAD_REQUEST);
+      return {
+        message: 'Incorrect Password!',
+        status: 'incorrect_password',
+      };
     }
 
     // TODO: create jwt token and assign to cookie
@@ -65,6 +71,7 @@ export class AuthService {
 
     return {
       message: 'Login Successful!',
+      status: 'login_successful',
       access_token: token,
     };
   }
