@@ -38,7 +38,9 @@
         Sorry! Password entered is incorrect
       </div>
     </div>
-    <a class="text-right text-[#2558E5] font-semibold">Forgot Password</a>
+    <a href="/forgot" class="text-right text-[#2558E5] font-semibold"
+      >Forgot Password</a
+    >
     <button
       class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black md:mt-6"
       :disabled="!email || !password"

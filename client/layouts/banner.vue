@@ -90,9 +90,23 @@
         </div>
         <div class="flex text-sm sm:text-base mt-1">
           <p class="text-[#404555]">{{ getFormSubTitle }}</p>
-          <!--          <a href="/signup" class="text-[#2558E5] font-semibold ml-1"-->
-          <!--            >Sign Up</a-->
-          <!--          >-->
+          <a
+            :class="
+              ($route.name === 'forgot' && 'hidden') ||
+              ($route.name === 'reset' && 'hidden')
+            "
+            :href="
+              ($route.name === 'login' && '/register') ||
+              ($route.name === 'register' && '/login') ||
+              ($route.name === 'forgot' && '/login') ||
+              ($route.name === 'reset' && '/login')
+            "
+            class="text-[#2558E5] font-semibold ml-1"
+            >{{
+              ($route.name === 'login' && 'Sign Up') ||
+              ($route.name === 'register' && 'Sign In')
+            }}</a
+          >
         </div>
         <slot />
       </div>
