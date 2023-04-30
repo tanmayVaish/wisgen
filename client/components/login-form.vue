@@ -148,6 +148,7 @@
                 class="w-full p-3"
                 :type="showPassword ? 'text' : 'password'"
                 placeholder="Password"
+                @focusout="validatePassword(password)"
               />
               <div class="px-3" @click="toggleShowPassword">
                 <svg
@@ -164,6 +165,13 @@
                 </svg>
               </div>
             </div>
+
+            <div
+              v-if="validatePasswordError"
+              class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
+            >
+              Password must be at least 8 characters
+            </div>
             <div
               v-if="passwordError"
               class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
@@ -179,7 +187,12 @@
         </div>
         <button
           class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] mt-2 focus:outline-none focus:ring-2 focus:ring-black md:mt-6 p-3 text-lg w-full"
-          :disabled="!email || !password || validateEmailOrMobileError"
+          :disabled="
+            !email ||
+            !password ||
+            validateEmailOrMobileError ||
+            validatePasswordError
+          "
           type="submit"
         >
           Sign In
@@ -201,6 +214,7 @@ export default {
       mobileError: false,
       passwordError: false,
       validateEmailOrMobileError: '',
+      validatePasswordError: false,
 
       showPassword: false,
     }
@@ -210,8 +224,12 @@ export default {
       this.showPassword = !this.showPassword
     },
     validateEmailOrMobile(input) {
+      this.emailError = false
+      this.mobileError = false
+
       const emailRegex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
       const mobileRegex = /^[0-9]{10}$/
+
       if (emailRegex.test(input)) {
         this.validateEmailOrMobileError = false
         return 'email'
@@ -221,6 +239,15 @@ export default {
       } else {
         this.validateEmailOrMobileError = true
         return false
+      }
+    },
+    validatePassword(password) {
+      this.passwordError = false
+
+      if (password.length < 8) {
+        this.validatePasswordError = true
+      } else {
+        this.validatePasswordError = false
       }
     },
     login() {
@@ -238,7 +265,7 @@ export default {
         .then((data) => {
           if (data.status === 'login_successful') {
             this.$router.push('/')
-          } else if (data.status === 'user_not_found') {
+          } else if (data.status === 'email_not_found') {
             this.emailError = true
           } else if (data.status === 'mobile_not_found') {
             this.mobileError = true

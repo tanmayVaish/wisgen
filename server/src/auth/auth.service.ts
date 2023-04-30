@@ -130,17 +130,35 @@ export class AuthService {
   }
 
   async login(body: loginDto) {
-    const user = await this.userRepository
-      .createQueryBuilder('user')
-      .where('user.email = :email', { email: body.email })
-      .orWhere('user.mobile = :mobile', { mobile: body.email })
-      .getOne();
+    const isEmail: boolean = /\S+@\S+\.\S+/.test(body.email);
 
-    if (!user) {
-      return {
-        message: 'User Not Found!',
-        status: 'user_not_found',
-      };
+    let user;
+    if (isEmail) {
+      user = await this.userRepository.findOne({
+        where: {
+          email: body.email,
+        },
+      });
+
+      if (!user) {
+        return {
+          message: 'User Not Found!',
+          status: 'email_not_found',
+        };
+      }
+    } else {
+      user = await this.userRepository.findOne({
+        where: {
+          mobile: body.email,
+        },
+      });
+
+      if (!user) {
+        return {
+          message: 'User Not Found!',
+          status: 'mobile_not_found',
+        };
+      }
     }
 
     const isMatch = await bcrypt.compare(body.password, user.password);

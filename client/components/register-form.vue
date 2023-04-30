@@ -201,6 +201,7 @@
                   class="w-full p-3"
                   :type="showPassword ? 'text' : 'password'"
                   placeholder="Password"
+                  @focusout="validatePassword(password)"
                 />
                 <div class="px-3" @click="toggleShowPassword">
                   <svg
@@ -221,6 +222,10 @@
 
             <div
               class="font-poppins text-xs md:text-sm mt-1 w-full font-light text-[#404555]"
+              :class="{
+                'text-[#D92D20]': validationPasswordError,
+                'text-[#404555]': !validationPasswordError,
+              }"
             >
               Password must be at least 8 characters
             </div>
@@ -244,7 +249,8 @@
             !mobile ||
             validationNameError ||
             validationEmailError ||
-            validationMobileError
+            validationMobileError ||
+            validationPasswordError
           "
         >
           Sign up
@@ -277,6 +283,7 @@ export default {
       validationNameError: false,
       validationEmailError: false,
       validationMobileError: false,
+      validationPasswordError: false,
 
       country_code: [
         {
@@ -309,6 +316,8 @@ export default {
       return String.fromCodePoint(...codePoints)
     },
     validateEmail() {
+      this.emailError = false
+
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (emailRegex.test(this.email)) {
         this.validationEmailError = false
@@ -317,11 +326,20 @@ export default {
       }
     },
     validateMobile() {
+      this.mobileError = false
+
       const mobileRegex = /^[0-9]{10}$/
       if (mobileRegex.test(this.mobile)) {
         this.validationMobileError = false
       } else {
         this.validationMobileError = true
+      }
+    },
+    validatePassword(password) {
+      if (password.length >= 8) {
+        this.validationPasswordError = false
+      } else {
+        this.validationPasswordError = true
       }
     },
     validateName(firstName) {
