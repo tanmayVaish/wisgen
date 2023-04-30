@@ -6,10 +6,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { DatabaseModule } from 'src/database/database.module';
 import { userProviders } from 'src/users/user.provider';
 import { MailgunModule } from '@nextnm/nestjs-mailgun';
-import * as process from 'process';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     UsersModule,
     DatabaseModule,
     JwtModule.register({
