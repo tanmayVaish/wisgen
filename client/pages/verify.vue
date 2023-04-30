@@ -16,7 +16,7 @@ export default {
       })
         .then((res) => res.json())
         .then((res) => {
-          if (res.status === 'email_verified') {
+          if (res.status === 'email_verified' && this.$cookies.get('token')) {
             this.$router.push('/')
           } else {
             this.$router.push('/login')
