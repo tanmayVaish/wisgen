@@ -26,7 +26,10 @@ export class AuthService {
       });
 
       if (existingUser) {
-        throw new HttpException('User Already Exists!', HttpStatus.BAD_REQUEST);
+        return {
+          message: 'User Already Exists!',
+          status: 'user_exists',
+        };
       }
 
       const saltOrRounds = 10;
@@ -64,7 +67,10 @@ export class AuthService {
         options,
       );
 
-      return user;
+      return {
+        message: 'User Registered Successfully!',
+        status: 'user_registered',
+      };
     } catch (e) {
       return e;
     }

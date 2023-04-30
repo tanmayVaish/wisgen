@@ -145,12 +145,20 @@
               placeholder="Mobile Number"
             />
           </div>
-          <input
-            v-model="email"
-            class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm w-full mb-3"
-            type="text"
-            placeholder="Email Address"
-          />
+          <div class="mb-3">
+            <input
+              v-model="email"
+              class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm w-full"
+              type="text"
+              placeholder="Email Address"
+            />
+            <div
+              v-if="emailError"
+              class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
+            >
+              Email already exists
+            </div>
+          </div>
 
           <div class="mb-3">
             <input
@@ -175,12 +183,14 @@
           </p>
         </div>
         <button
+          type="submit"
           class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] mt-2 focus:outline-none focus:ring-2 focus:ring-black md:mt-6 p-3 text-lg w-full"
         >
-          Sign In
+          Sign up
         </button>
       </form>
     </div>
+    <verify-modal :email="email" :mailsent="mailSent" />
   </div>
 </template>
 <script>
@@ -189,8 +199,12 @@
 // const registerSchema = yup.object({
 //   email: yup.string().required().email(),
 // })
+
 export default {
   name: 'register-form.vue',
+  components: {
+    verifyModal: () => import('@/components/verify-modal.vue'),
+  },
   data() {
     return {
       firstName: '',
@@ -198,6 +212,8 @@ export default {
       email: '',
       password: '',
       mobile: '',
+      mailSent: false,
+      emailError: false,
       country_code: [
         {
           country: 'India',
@@ -217,8 +233,6 @@ export default {
       ],
     }
   },
-  mounted() {},
-  updated() {},
   methods: {
     handleRegister() {
       fetch('/auth/register', {
@@ -237,7 +251,11 @@ export default {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data)
+          if (data.status === 'user_registered') {
+            this.mailSent = true
+          } else if (data.status === 'user_exists') {
+            this.emailError = true
+          }
         })
         .catch((err) => console.log(err))
     },

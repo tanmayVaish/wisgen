@@ -154,7 +154,7 @@
           </div>
         </div>
         <button
-          class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] focus:outline-none focus:ring-2 focus:ring-black md:mt-6 p-3"
+          class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] mt-2 focus:outline-none focus:ring-2 focus:ring-black md:mt-6 p-3 text-lg w-full"
           :disabled="!email || !password"
           type="submit"
         >
