@@ -1,8 +1,19 @@
 <template>
-  <div>
-    <h1>Index Page</h1>
-    <div>You are successfully Logged In!</div>
-    <button @click="logout">Logout</button>
+  <div class="grid place-content-center">
+    <h1
+      class="text-4xl font-bold text-center text-black md:text-5xl lg:text-6xl"
+    >
+      Index Page
+    </h1>
+    <div class="px-4 py-2 mt-4 text-white bg-green rounded-md shadow-md">
+      You are successfully Logged In!
+    </div>
+    <button
+      class="px-4 py-2 text-white bg-red rounded-md shadow-md"
+      @click="logout"
+    >
+      Logout
+    </button>
   </div>
 </template>
 
@@ -15,7 +26,6 @@ export default Vue.extend({
   mounted() {
     // get cookie
     const cookie = this.$cookies.get('token')
-    console.log(cookie)
 
     if (cookie) {
       // redirect to dashboard
@@ -28,6 +38,7 @@ export default Vue.extend({
   methods: {
     logout() {
       this.$cookies.remove('token')
+      this.$router.push('/login')
     },
   },
 })

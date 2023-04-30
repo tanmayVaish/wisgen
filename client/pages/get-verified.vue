@@ -8,5 +8,17 @@
 <script>
 export default {
   name: 'GetVerified',
+  mounted() {
+    // get cookie
+    const cookie = this.$cookies.get('token')
+
+    if (cookie) {
+      // redirect to dashboard
+      this.$router.push('/')
+    } else {
+      // redirect to login
+      this.$router.push('/login')
+    }
+  },
 }
 </script>

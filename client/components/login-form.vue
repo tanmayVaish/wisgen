@@ -223,7 +223,7 @@ export default {
           } else if (data.status === 'incorrect_password') {
             this.passwordError = true
           } else {
-            console.log(data.message)
+            // console.log(data.message)
           }
         })
     },
