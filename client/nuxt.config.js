@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 export default {
   server: {
     port: 3000, // default: 3000
@@ -39,11 +41,11 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/proxy'],
+  modules: ['@nuxtjs/proxy', '@nuxtjs/dotenv', 'cookie-universal-nuxt'],
 
   proxy: {
     '/auth': {
-      target: 'http://localhost:8080',
+      target: process.env.SERVER_URL,
     },
   },
 

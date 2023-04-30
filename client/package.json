@@ -20,8 +20,11 @@
     "*.**": "prettier --check --ignore-unknown"
   },
   "dependencies": {
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/proxy": "^2.1.0",
+    "cookie-universal-nuxt": "^2.2.2",
     "core-js": "^3.25.3",
+    "dotenv": "^16.0.3",
     "nuxt": "^2.15.8",
     "vee-validate": "^4.8.6",
     "vue": "^2.7.10",
