@@ -6,7 +6,6 @@ import { loginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { MailgunService, EmailOptions } from '@nextnm/nestjs-mailgun';
-import * as domain from 'domain';
 
 @Injectable()
 export class AuthService {
@@ -19,16 +18,22 @@ export class AuthService {
 
   async register(body: registerDto) {
     try {
-      const existingUser = await this.userRepository.findOne({
+      const existingUserEmail = await this.userRepository.findOne({
         where: {
           email: body.email,
         },
       });
 
-      if (existingUser) {
+      const existingUserMobile = await this.userRepository.findOne({
+        where: {
+          mobile: body.mobile,
+        },
+      });
+
+      if (existingUserEmail || existingUserMobile) {
         return {
           message: 'User Already Exists!',
-          status: 'user_exists',
+          status: 'user_already_exists',
         };
       }
 
@@ -115,11 +120,13 @@ export class AuthService {
   }
 
   async login(body: loginDto) {
-    const user = await this.userRepository.findOne({
-      where: {
-        email: body.email,
-      },
-    });
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.email = :email', { email: body.email })
+      .orWhere('user.mobile = :mobile', { mobile: body.email })
+      .getOne();
+
+    console.log(user);
 
     if (!user) {
       return {
