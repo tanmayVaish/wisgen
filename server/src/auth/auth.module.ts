@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { DatabaseModule } from 'src/database/database.module';
 import { userProviders } from 'src/users/user.provider';
 import { MailgunModule } from '@nextnm/nestjs-mailgun';
+import * as process from 'process';
 
 @Module({
   imports: [
@@ -13,14 +14,14 @@ import { MailgunModule } from '@nextnm/nestjs-mailgun';
     DatabaseModule,
     JwtModule.register({
       global: true,
-      secret: 'secret',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '60s' },
     }),
     MailgunModule.forAsyncRoot({
       useFactory: async () =>
         ({
-          username: 'tanmayvaish.me',
-          key: 'key-b84e13eb7063c3eca1b142d281163b2b',
+          username: process.env.MAILGUN_USERNAME,
+          key: process.env.MAILGUN_API_KEY,
           // public_key: 'string', // OPTIONAL
           // timeout: 'number', // OPTIONAL
           // url: 'string', // OPTIONAL // default: 'api.mailgun.net'. Note that if you are using the EU region the host should be set to 'api.eu.mailgun.net'

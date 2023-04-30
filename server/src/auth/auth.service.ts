@@ -6,11 +6,13 @@ import { loginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { MailgunService, EmailOptions } from '@nextnm/nestjs-mailgun';
+import * as process from 'process';
+import constant from '../constant';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('USER_REPOSITORY')
+    @Inject(constant.USER_REPOSITORY)
     private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
     private mailgunService: MailgunService,
@@ -58,19 +60,20 @@ export class AuthService {
         email: user.email,
       };
 
-      const token = await this.jwtService.signAsync(payload);
+      const token: string = await this.jwtService.signAsync(payload);
+
+      const originalUrl: string = process.env.ORIGIN_URL;
+      const from: string = process.env.FROM_EMAIL;
 
       const options: EmailOptions = {
-        from: 'tanmay.vaish@outlook.com',
+        from: from,
         to: user?.email,
         subject: 'Welcome to Wisgen!',
-        text: `This is a verification email. Please verify your email by clicking on the link below. http://localhost:3000/verify?token=${token}`,
+        text: `This is a verification email. Please verify your email by clicking on the link below. ${originalUrl}/verify?token=${token}`,
         html:
           '<h1>WELCOME TO Wisgen!</h1>' +
           '<p>This is a verification email. Please verify your email by clicking on the link below.</p>' +
-          '<a href="http://localhost:3000/verify?token=' +
-          token +
-          '">Verify Email</a>',
+          `<a href="${originalUrl}/verify?token=${token}">Verify Email</a>`,
         attachment: '',
       };
 
@@ -133,8 +136,6 @@ export class AuthService {
       .orWhere('user.mobile = :mobile', { mobile: body.email })
       .getOne();
 
-    console.log(user);
-
     if (!user) {
       return {
         message: 'User Not Found!',
@@ -150,8 +151,6 @@ export class AuthService {
         status: 'incorrect_password',
       };
     }
-
-    // TODO: create jwt token and assign to cookie
 
     const payload = {
       id: user.id,
