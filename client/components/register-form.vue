@@ -112,46 +112,77 @@
         @submit.prevent="handleRegister"
       >
         <div>
-          <input
-            v-model="firstName"
-            class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm w-full mb-3"
-            type="text"
-            placeholder="First Name"
-          />
+          <div class="mb-3">
+            <input
+              v-model="firstName"
+              class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm w-full"
+              type="text"
+              placeholder="First Name"
+              @focusout="validateName(firstName)"
+            />
+            <div
+              v-if="validationNameError"
+              class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
+            >
+              This field is required
+            </div>
+          </div>
           <input
             v-model="lastName"
             class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm w-full mb-3"
             type="text"
             placeholder="Last Name"
           />
-          <div class="flex">
-            <select
-              name="country"
-              class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm mb-3 mr-2"
-            >
-              <option
-                v-for="(item, i) in country_code"
-                :key="i"
-                :value="item.country"
+          <div class="flex flex-col mb-3">
+            <div class="flex">
+              <select
+                name="country"
+                class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm mr-2"
               >
-                {{ item.country }}
-              </option>
-            </select>
-
-            <input
-              v-model="mobile"
-              class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm mb-3 w-full"
-              type="number"
-              placeholder="Mobile Number"
-            />
+                <option
+                  v-for="(item, i) in country_code"
+                  :key="i"
+                  :value="item.country"
+                >
+                  {{ item.country }}
+                </option>
+              </select>
+              <input
+                v-model="mobile"
+                class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm w-full"
+                type="number"
+                placeholder="Mobile Number"
+                @focusout="validateMobile(mobile)"
+              />
+            </div>
+            <div
+              v-if="mobileError"
+              class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
+            >
+              Mobile already exists
+            </div>
+            <div
+              v-if="validationMobileError"
+              class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
+            >
+              Please enter a valid mobile number
+            </div>
           </div>
+
           <div class="mb-3">
             <input
               v-model="email"
               class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black p-3 rounded-sm w-full"
               type="text"
               placeholder="Email Address"
+              @focusout="validateEmail(email)"
             />
+            <div
+              v-if="validationEmailError"
+              class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
+            >
+              Please enter a valid email address
+            </div>
             <div
               v-if="emailError"
               class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
@@ -185,6 +216,15 @@
         <button
           type="submit"
           class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] mt-2 focus:outline-none focus:ring-2 focus:ring-black md:mt-6 p-3 text-lg w-full"
+          :disabled="
+            !firstName ||
+            !email ||
+            !password ||
+            !mobile ||
+            validationNameError ||
+            validationEmailError ||
+            validationMobileError
+          "
         >
           Sign up
         </button>
@@ -194,12 +234,6 @@
   </div>
 </template>
 <script>
-// import * as yup from 'yup'
-//
-// const registerSchema = yup.object({
-//   email: yup.string().required().email(),
-// })
-
 export default {
   name: 'register-form.vue',
   components: {
@@ -212,8 +246,15 @@ export default {
       email: '',
       password: '',
       mobile: '',
+
       mailSent: false,
       emailError: false,
+      mobileError: false,
+
+      validationNameError: false,
+      validationEmailError: false,
+      validationMobileError: false,
+
       country_code: [
         {
           country: 'India',
@@ -234,6 +275,27 @@ export default {
     }
   },
   methods: {
+    validateEmail() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (emailRegex.test(this.email)) {
+        this.validationEmailError = false
+      } else {
+        this.validationEmailError = true
+      }
+    },
+    validateMobile() {
+      const mobileRegex = /^[0-9]{10}$/
+      if (mobileRegex.test(this.mobile)) {
+        this.validationMobileError = false
+      } else {
+        this.validationMobileError = true
+      }
+    },
+    validateName(firstName) {
+      firstName !== ''
+        ? (this.validationNameError = false)
+        : (this.validationNameError = true)
+    },
     handleRegister() {
       fetch('/auth/register', {
         method: 'POST',
@@ -253,8 +315,10 @@ export default {
         .then((data) => {
           if (data.status === 'user_registered') {
             this.mailSent = true
-          } else if (data.status === 'user_exists') {
+          } else if (data.status === 'email_already_exists') {
             this.emailError = true
+          } else if (data.status === 'mobile_already_exists') {
+            this.mobileError = true
           }
         })
         .catch((err) => console.log(err))

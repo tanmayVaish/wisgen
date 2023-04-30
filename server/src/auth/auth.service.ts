@@ -30,10 +30,17 @@ export class AuthService {
         },
       });
 
-      if (existingUserEmail || existingUserMobile) {
+      if (existingUserEmail) {
         return {
-          message: 'User Already Exists!',
-          status: 'user_already_exists',
+          message: 'Email Already Exists!',
+          status: 'email_already_exists',
+        };
+      }
+
+      if (existingUserMobile) {
+        return {
+          message: 'Mobile Number Already Exists!',
+          status: 'mobile_already_exists',
         };
       }
 

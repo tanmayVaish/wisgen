@@ -118,7 +118,14 @@
               class="border border-[#DCDEE5] focus:outline-none focus:ring-2 focus:ring-black rounded-sm w-full p-3"
               type="text"
               placeholder="Email or Mobile Number"
+              @focusout="validateEmailOrMobile(email)"
             />
+            <div
+              v-if="validateEmailOrMobileError"
+              class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
+            >
+              The email address or phone number is invalid
+            </div>
             <div
               v-if="mobileError"
               class="text-[#D92D20] placeholder:text-red-400 font-poppins text-xs md:text-sm mt-1 w-full"
@@ -155,7 +162,7 @@
         </div>
         <button
           class="bg-[#F1C12B] text-[#121317] font-semibold rounded-[4px] mt-2 focus:outline-none focus:ring-2 focus:ring-black md:mt-6 p-3 text-lg w-full"
-          :disabled="!email || !password"
+          :disabled="!email || !password || validateEmailOrMobileError"
           type="submit"
         >
           Sign In
@@ -176,9 +183,24 @@ export default {
       emailError: false,
       mobileError: false,
       passwordError: false,
+      validateEmailOrMobileError: '',
     }
   },
   methods: {
+    validateEmailOrMobile(input) {
+      const emailRegex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
+      const mobileRegex = /^[0-9]{10}$/
+      if (emailRegex.test(input)) {
+        this.validateEmailOrMobileError = false
+        return 'email'
+      } else if (mobileRegex.test(input)) {
+        this.validateEmailOrMobileError = false
+        return 'mobile'
+      } else {
+        this.validateEmailOrMobileError = true
+        return false
+      }
+    },
     login() {
       fetch('/auth/login', {
         method: 'POST',
